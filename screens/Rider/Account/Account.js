@@ -49,7 +49,7 @@ const Account = ({ onCLose }) => {
 
   const menuItems = [
     {
-      title: "Business Information",
+      title: "Personal Information",
       icon: <Feather name="user" size={24} color={maincolors.primary} />,
       screen: "PersonalInfomationScreen",
     },
