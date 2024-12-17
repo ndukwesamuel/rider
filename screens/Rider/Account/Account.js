@@ -9,9 +9,9 @@ import {
 } from "react-native";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { maincolors } from "../../utills/Themes";
+import { maincolors } from "../../../utills/Themes";
 import { useDispatch } from "react-redux";
-import { reset_login } from "../../Redux/AuthSlice";
+import { reset_login } from "../../../Redux/AuthSlice";
 
 const Account = ({ onCLose }) => {
   const navigation = useNavigation();

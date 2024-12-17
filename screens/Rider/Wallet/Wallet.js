@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { ReusableBackButton } from "../../components/shared/SharedButton_Icon";
+import { ReusableBackButton } from "../../../components/shared/SharedButton_Icon";
 
 export default function Wallet() {
   const navigation = useNavigation();
@@ -47,9 +47,9 @@ export default function Wallet() {
   return (
     <View style={styles.container}>
       {/* Total Balance Section */}
-      <ReusableBackButton
+      {/* <ReusableBackButton
         style={{ position: "absolute", top: 80, zIndex: 1, left: 20 }}
-      />
+      /> */}
       <View style={styles.balanceContainer}>
         <Text style={styles.balanceLabel}>Total Balance</Text>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
@@ -76,7 +76,7 @@ export default function Wallet() {
             style={styles.button}
             onPress={() => navigation.navigate("WithdrawalScreen")}
           >
-            <Image source={require("../../assets/Foodmart/withdraw.png")} />
+            <Image source={require("../../../assets/Foodmart/withdraw.png")} />
             <Text style={styles.buttonText}>Withdraw</Text>
           </TouchableOpacity>
         </View>

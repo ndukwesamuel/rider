@@ -123,7 +123,7 @@ const MainScreen = () => {
   const dispatch = useDispatch();
 
   console.log({
-    whatyouhavenotdone: user_data?.meta?.onboarding,
+    whatyouhavenotdone: user_profile_data,
   });
 
   const logoutData = () => {
@@ -187,16 +187,4 @@ const MainScreen = () => {
       <Text>Welcome! All required steps are complete.</Text>
     </View>
   );
-};
-
-const BeforeLOginScreen = () => {
-  const { user_data, user_isLoading } = useSelector((state) => state?.Auth);
-
-  const dispatch = useDispatch();
-
-  console.log({
-    kk: user_data?.data?.user,
-  });
-
-  return <Text> kaka</Text>;
 };

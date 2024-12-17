@@ -1,13 +1,13 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { ReusableBackButton } from "../../components/shared/SharedButton_Icon";
-import { ReusableTitle } from "../../components/shared/Reuseablecomponent";
-import { Forminput, FormLabel } from "../../components/shared/InputForm";
-import { PrimaryButton } from "../../components/shared/Button";
+import { ReusableBackButton } from "../../../components/shared/SharedButton_Icon";
+import { ReusableTitle } from "../../../components/shared/Reuseablecomponent";
+import { Forminput, FormLabel } from "../../../components/shared/InputForm";
+import { PrimaryButton } from "../../../components/shared/Button";
 import { useNavigation } from "@react-navigation/native";
 
 export default function WithdrawalScreen() {
-    const navigation = useNavigation()
+  const navigation = useNavigation();
   const [amount, setAmount] = useState("");
   const [accountName, setAccountName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
@@ -17,8 +17,11 @@ export default function WithdrawalScreen() {
     <View style={styles.container}>
       <View style={{ paddingVertical: 10 }}>
         <Text style={styles.pageTitle}>Withdraw</Text>
-        <Pressable style={{ position: "absolute" }} onPress={() => navigation.goBack()}>
-          <Image source={require("../../assets/Foodmart/backArrow.png")} />
+        <Pressable
+          style={{ position: "absolute" }}
+          onPress={() => navigation.goBack()}
+        >
+          <Image source={require("../../../assets/Foodmart/backArrow.png")} />
         </Pressable>
       </View>
       <View style={styles.formArea}>
@@ -42,8 +45,8 @@ export default function WithdrawalScreen() {
           <Forminput style={styles.textInput} />
         </View>
       </View>
-      <View style={{paddingHorizontal:20}}>
-        <PrimaryButton buttonText={"Withdraw"}/>
+      <View style={{ paddingHorizontal: 20 }}>
+        <PrimaryButton buttonText={"Withdraw"} />
       </View>
     </View>
   );
@@ -67,6 +70,6 @@ const styles = StyleSheet.create({
   formArea: {
     paddingHorizontal: 20,
     gap: 16,
-    marginTop:50
+    marginTop: 50,
   },
 });

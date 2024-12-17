@@ -1,7 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Home from "../screens/UserScreens/Home";
 import DeliveryMap from "../screens/UserScreens/DeliveryMap";
 import RatingPage from "../screens/UserScreens/RatingPage";
 import FoodDetails from "../screens/UserScreens/FoodDetails";
@@ -13,20 +12,19 @@ import FAQs from "../screens/FAQs";
 import FirstRewardScreen from "../screens/Reward/RewardSreen1";
 // import SecondRewardScreen from "../screens/Reward/RewardScreen2";
 import HomeScreen from "../screens/HomeScreen";
-import MainHomescreen from "../screens/UserScreens/MainHomescreen";
 import RestaurantMenuScreen from "../screens/UserScreens/RestaurantMenuScreen";
 import CheckoutPage from "../screens/UserScreens/CheckoutPage";
 import SupportMainPage from "../screens/Support/supportMainPage";
 import ReportIssuePage from "../screens/Support/reportIssuePage";
 import ChatPage from "../screens/Support/chatPage";
-import Wallet from "../screens/Wallet/Wallet";
-import WithdrawalScreen from "../screens/Wallet/WithdrawalScreen";
-import TopupScreen from "../screens/Wallet/TopupScreen";
+import Wallet from "../screens/Rider/Wallet/Wallet";
+import WithdrawalScreen from "../screens/Rider/Wallet/WithdrawalScreen";
+import TopupScreen from "../screens/Rider/Wallet/TopupScreen";
 // import PersonalInfomationScreen from "../screens/UserScreens/PersonalInfomationScreen";
 import SecondRewardScreen from "../screens/Reward/RewardScreen2";
 import PersonalInfomationScreen from "../screens/UserScreens/PersonalInfomationScreen";
 import DetailsPage from "../screens/Detail/detailsPage";
-import TopupScreen2 from "../screens/Wallet/TopupScreen2";
+import TopupScreen2 from "../screens/Rider/Wallet/TopupScreen2";
 import Notification from "../screens/Notification";
 import CompleteOrder from "../screens/UserScreens/CompleteOrder";
 import UpdatePassword from "../screens/Detail/updatePassword";
@@ -43,18 +41,25 @@ import OrderHistory from "../screens/Orders/OrderHistory";
 // import OrderHistory from "../screens/Orders/OrderHistory";
 import ChangePassowrd from "../components/Auth/ChangePassowrd";
 import AllOrder from "../screens/Orders/AllOrder";
+import UserTabNavigation from "./UserTabNavigation";
 // import DeliveredOrders from "../screens/Orders/DeliveredOrders";
 const Stack = createNativeStackNavigator();
 
 export default function UserNavigation() {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="RiderTabNavigation"
       screenOptions={{ headerShown: false }}
     >
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="RiderTabNavigation"
+        component={UserTabNavigation}
+      />
       <Stack.Screen name="OrderHistory" component={OrderHistory} />
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="MainHomescreen" component={MainHomescreen} />
       <Stack.Screen
         name="RestaurantMenuScreen"
         component={RestaurantMenuScreen}

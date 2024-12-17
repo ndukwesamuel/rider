@@ -7,11 +7,11 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { Forminput, FormLabel } from "../../components/shared/InputForm";
+import { Forminput, FormLabel } from "../../../components/shared/InputForm";
 import { useNavigation } from "@react-navigation/native";
 
 export default function TopupScreen() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={{ paddingVertical: 10 }}>
@@ -20,7 +20,7 @@ export default function TopupScreen() {
           style={{ position: "absolute" }}
           onPress={() => navigation.goBack()}
         >
-          <Image source={require("../../assets/Foodmart/backArrow.png")} />
+          <Image source={require("../../../assets/Foodmart/backArrow.png")} />
         </Pressable>
       </View>
       <View style={styles.formArea}>
@@ -31,7 +31,7 @@ export default function TopupScreen() {
         <View>
           <FormLabel data={"Select an Option"} />
           <TouchableOpacity
-          onPress={() => navigation.navigate("TopupScreen2")}
+            onPress={() => navigation.navigate("TopupScreen2")}
             style={[
               styles.textInput,
               {
@@ -50,7 +50,7 @@ export default function TopupScreen() {
               </Text>
               <Text style={{ color: "#858383" }}>Instant Top-up</Text>
             </View>
-            <Image source={require("../../assets/Foodmart/forward.png")} />
+            <Image source={require("../../../assets/Foodmart/forward.png")} />
           </TouchableOpacity>
         </View>
       </View>

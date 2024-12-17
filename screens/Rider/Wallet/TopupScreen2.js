@@ -9,9 +9,9 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Checkbox from "expo-checkbox";
-import { Forminput, FormLabel } from "../../components/shared/InputForm";
+import { Forminput, FormLabel } from "../../../components/shared/InputForm";
 import { useNavigation } from "@react-navigation/native";
-import { PrimaryButton } from "../../components/shared/Button";
+import { PrimaryButton } from "../../../components/shared/Button";
 
 export default function TopupScreen2() {
   const navigation = useNavigation();
@@ -30,7 +30,7 @@ export default function TopupScreen2() {
           style={{ position: "absolute" }}
           onPress={() => navigation.goBack()}
         >
-          <Image source={require("../../assets/Foodmart/backArrow.png")} />
+          <Image source={require("../../../assets/Foodmart/backArrow.png")} />
         </Pressable>
       </View>
 
