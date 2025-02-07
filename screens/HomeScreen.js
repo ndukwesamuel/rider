@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -8,18 +8,28 @@ import {
   Switch,
   ScrollView,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AppScreen from "../components/shared/AppScreen";
+import { Get_All_Rider_Order_Fun } from "../Redux/OrderSlice";
 const HomeScreen = () => {
   const [isAvailable, setIsAvailable] = React.useState(true);
   const { user_data, user_isLoading, user_profile_data } = useSelector(
     (state) => state?.Auth
   );
 
+  const dispatch = useDispatch();
+
   console.log({
     ddd: user_profile_data?.data?.name,
   });
+
+  useEffect(() => {
+    dispatch(Get_All_Rider_Order_Fun());
+
+    return () => {};
+  }, []);
+
   return (
     <AppScreen>
       <View style={styles.container}>

@@ -115,76 +115,124 @@ export const NavigationScreen = () => {
   );
 };
 
+// const MainScreen = () => {
+//   const { user_data, user_isLoading, user_profile_data } = useSelector(
+//     (state) => state?.Auth
+//   );
+
+//   const dispatch = useDispatch();
+
+//   console.log({
+//     whatyouhavenotdone: user_profile_data,
+//   });
+
+//   const logoutData = () => {
+//     console.log("this is me");
+//   };
+
+//   useEffect(() => {
+//     dispatch(UserProfile_Fun());
+
+//     return () => {};
+//   }, []);
+
+//   return <UserNavigation />;
+
+//   if (!user_data?.meta?.onboarding?.has_verified_email_or_mobile_number) {
+//     return <OtpScreen Close={logoutData} />;
+//   }
+
+//   if (!user_data?.meta?.onboarding?.has_filled_delivery_and_packaging) {
+//     return (
+//       <View>
+//         <Text>Please fill in your delivery and packaging details</Text>
+//       </View>
+//     );
+//   }
+
+//   if (!user_data?.meta?.onboarding?.has_filled_bank_details) {
+//     return (
+//       <View>
+//         <Text>Please fill in your bank details</Text>
+//       </View>
+//     );
+//   }
+
+//   if (!user_data?.meta?.onboarding?.has_filled_food_satefy_certification) {
+//     return (
+//       <View>
+//         <Text>Please fill in your food safety certification details</Text>
+//       </View>
+//     );
+//   }
+
+//   if (!user_data?.meta?.onboarding?.has_filled_opening_hours) {
+//     return (
+//       <View>
+//         <Text>Please fill in your opening hours</Text>
+//       </View>
+//     );
+//   }
+
+//   if (!user_data?.meta?.onboarding?.has_uploaded_cac_document) {
+//     return (
+//       <View>
+//         <Text>Please upload your CAC document</Text>
+//       </View>
+//     );
+//   }
+
+//   return (
+//     <View>
+//       <Text>Welcome! All required steps are complete.</Text>
+//     </View>
+//   );
+// };
+
 const MainScreen = () => {
-  const { user_data, user_isLoading, user_profile_data } = useSelector(
+  const { user_profile_data, user_isLoading, user_data } = useSelector(
     (state) => state?.Auth
   );
-
   const dispatch = useDispatch();
-
-  console.log({
-    whatyouhavenotdone: user_profile_data,
-  });
-
-  const logoutData = () => {
-    console.log("this is me");
-  };
 
   useEffect(() => {
     dispatch(UserProfile_Fun());
+  }, [dispatch]);
 
-    return () => {};
-  }, []);
+  if (user_isLoading) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
+  console.log({
+    jajaj: user_profile_data?.meta[0]?.onboarding,
+  });
+  const onboarding = user_profile_data?.meta[0]?.onboarding;
+  // console.log({
+  //   ghgh: onboarding,
+  // });
+  // Mapping keys to their corresponding components
+  // const onboardingComponents = {
+  //   // has_verified_email_or_mobile_number: <OtpScreen />,
+  //   // has_filled_bank_details: <BankDetails />,
+  //   // has_filled_food_satefy_certification: <FoodSafetyCertification />,
+  //   // has_uploaded_cac_document: <UploadCACDocument />,
+  //   // has_filled_opening_hours: <OpeningHours />,
+  //   // has_filled_delivery_and_packaging: <DeliveryAndPackaging />,
+  // };
+
+  // Find the first unmet onboarding step
+  // const unmetStep = Object.keys(onboardingComponents).find(
+  //   (key) => onboarding && !onboarding[key]
+  // );
+
+  // if (unmetStep) {
+  //   return onboardingComponents[unmetStep];
+  // }
+
+  // If all steps are complete, show the main navigation
   return <UserNavigation />;
-
-  if (!user_data?.meta?.onboarding?.has_verified_email_or_mobile_number) {
-    return <OtpScreen Close={logoutData} />;
-  }
-
-  if (!user_data?.meta?.onboarding?.has_filled_delivery_and_packaging) {
-    return (
-      <View>
-        <Text>Please fill in your delivery and packaging details</Text>
-      </View>
-    );
-  }
-
-  if (!user_data?.meta?.onboarding?.has_filled_bank_details) {
-    return (
-      <View>
-        <Text>Please fill in your bank details</Text>
-      </View>
-    );
-  }
-
-  if (!user_data?.meta?.onboarding?.has_filled_food_satefy_certification) {
-    return (
-      <View>
-        <Text>Please fill in your food safety certification details</Text>
-      </View>
-    );
-  }
-
-  if (!user_data?.meta?.onboarding?.has_filled_opening_hours) {
-    return (
-      <View>
-        <Text>Please fill in your opening hours</Text>
-      </View>
-    );
-  }
-
-  if (!user_data?.meta?.onboarding?.has_uploaded_cac_document) {
-    return (
-      <View>
-        <Text>Please upload your CAC document</Text>
-      </View>
-    );
-  }
-
-  return (
-    <View>
-      <Text>Welcome! All required steps are complete.</Text>
-    </View>
-  );
 };
