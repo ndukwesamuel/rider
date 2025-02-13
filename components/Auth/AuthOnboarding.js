@@ -26,7 +26,7 @@ const AuthOnboarding = ({ setAuthType }) => {
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                setAuthType("signup"); // Toggle start state to true
+                setAuthType("select"); // Toggle start state to true
                 // navigation.navigate("Signup");
               }}
             >

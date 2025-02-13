@@ -229,7 +229,7 @@ const OtpScreen = ({ Close, onSetAuth, onSetAuth2 }) => {
                 alignItems: "center",
               }}
             >
-              {[...Array(length)].map((_, index) => (
+              {[...Array(length)]?.map((_, index) => (
                 <TextInput
                   key={index}
                   ref={(ref) => (inputRefs.current[index] = ref)}
