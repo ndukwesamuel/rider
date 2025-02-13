@@ -39,9 +39,9 @@ const RidersignUp = ({ onSetAuth }) => {
   return (
     <AppscreenLogo>
       {step === 1 ? (
-        <StepOneSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
+        <StepThreeSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
       ) : step === 2 ? (
-        <StepTwoSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
+        <StepOneSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
       ) : step === 3 ? (
         <StepThreeSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
       ) : step === 4 ? (
@@ -148,7 +148,7 @@ const StepOneSignUp = ({ onSetAuth, changeStep }) => {
   const Registration_Mutation = useMutation(
     (data_info) => {
       const url = `${API_BASEURL}v1/rider/register`;
-      console.log({url})
+      console.log({ url });
       return axios.post(url, data_info, {
         headers: { "Content-Type": "application/json" },
       });
@@ -217,7 +217,9 @@ const StepOneSignUp = ({ onSetAuth, changeStep }) => {
         <TextInput
           style={styles.input}
           placeholder="Confirm password"
-          onChangeText={(text) => handleInputChange("password_confirmation", text)}
+          onChangeText={(text) =>
+            handleInputChange("password_confirmation", text)
+          }
           value={formData.password_confirmation}
         />
       </View>
@@ -244,84 +246,15 @@ const StepOneSignUp = ({ onSetAuth, changeStep }) => {
   );
 };
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     paddingHorizontal: 20,
-//     paddingTop: 60,
-//   },
-//   header: {
-//     fontSize: 24,
-//     fontWeight: "bold",
-//     color: "#1D3B28",
-//     textAlign: "center",
-//   },
-//   subHeader: {
-//     fontSize: 16,
-//     color: "#666",
-//     textAlign: "center",
-//     marginBottom: 20,
-//   },
-//   inputContainer: {
-//     marginBottom: 20,
-//   },
-//   input: {
-//     backgroundColor: "#F5F5F5",
-//     borderRadius: 8,
-//     padding: 12,
-//     marginBottom: 10,
-//     fontSize: 16,
-//     borderColor: "#ddd",
-//     borderWidth: 1,
-//   },
-//
-//   halfInput: {
-//     width: "48%",
-//   },
-//   button: {
-//     backgroundColor: "#FFA500",
-//     padding: 15,
-//     borderRadius: 8,
-//     alignItems: "center",
-//     marginBottom: 20,
-//   },
-//   buttonText: {
-//     fontSize: 18,
-//     fontWeight: "bold",
-//     color: "white",
-//   },
-//   footerText: {
-//     textAlign: "center",
-//     fontSize: 14,
-//     color: "#666",
-//   },
-//   signInText: {
-//     color: "#1D3B28",
-//     fontWeight: "bold",
-//   },
-// });
-
-// export default StepOneSignUp;
-
 const StepTwoSignUp = ({ onSetAuth, changeStep }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    Business_Name: "",
-    Business_Registration_Number: "",
-    Business_Address: "",
-    Contact_Persons_Name: "",
-    Contact_Persons_Email: "",
-    Contact_Persons_Mobile_Number: "",
-    Add_Emergency_Number: "",
-    password: "",
-    gender: "", // Added gender here
+    name: "",
+    mobile_number: "",
+    relationship: "",
   });
-
-  const otpemail = useSelector((state) => state?.OnboardingSlice);
-  const { user_data, user_isLoading } = useSelector((state) => state?.Auth);
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) => ({
@@ -329,129 +262,75 @@ const StepTwoSignUp = ({ onSetAuth, changeStep }) => {
       [field]: value,
     }));
   };
-
-  const Registration_Mutation = useMutation(
+  const NextOfKin_Mutation = useMutation(
     (data_info) => {
-      const url = `${API_BASEURL}api/auth/signup`;
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      };
-      return axios.post(url, data_info, config);
+      const url = `${API_BASEURL}v1/rider/onboarding/next-of-kin`;
+      console.log({ url });
+      return axios.post(url, data_info, {
+        headers: { "Content-Type": "application/json" },
+      });
     },
     {
       onSuccess: (success) => {
-        Toast.show({
-          type: "success",
-          text1: `${success?.data?.message}`,
-        });
-        dispatch(checkOtp(true));
+        Toast.show({ type: "success", text1: success.data.message });
+        changeStep(3);
       },
       onError: (error) => {
-        Toast.show({
-          type: "error",
-          text1: `${error?.response?.data?.message}`,
-        });
+        Toast.show({ type: "error", text1: error?.response?.data?.message });
       },
     }
   );
 
-  const handleSignUp = () => {
-    const { email, password, firstName, lastName, phoneNumber, homeAddress } =
-      formData;
-    dispatch(setOtpEmail(email));
-    Registration_Mutation.mutate({
-      email,
-      password,
-      userName: firstName,
-      lastName,
-      phoneNumber,
-      homeLocation: homeAddress,
-    });
-  };
-
-  const [text, setText] = useState("");
-
-  const handleTextChange = (newText) => {
-    setText(newText);
-  };
-
   return (
     <ScrollView style={styles.container}>
-      <View style={{}}>
-        <View style={{ alignSelf: "center" }}>
-          <Text style={styles.header}>Delivery & Packaging</Text>
-          <Text
-            style={[
-              styles.subHeader,
-              {
-                textAlign: "center",
-              },
-            ]}
-          >
-            Fill out all fields...
-          </Text>
+      <View style={{ alignSelf: "center" }}>
+        <Text style={styles.header}>Next of Kin</Text>
+        <Text style={styles.subHeader}>Fill out all fields...</Text>
+      </View>
+
+      <View style={{ gap: 10 }}>
+        {/* Full Name */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>Full Name</Text>
+          <Forminput
+            placeholder="Full Name"
+            onChangeText={(text) => handleInputChange("name", text)}
+            value={formData.name}
+            style={styles.input}
+          />
         </View>
 
-        <View style={{ gap: 10 }}>
-          {/* Full Name */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Delivery Zones</Text>
-            <Forminput
-              placeholder="Delivery Zones"
-              onChangeText={(text) => handleInputChange("firstName", text)}
-              value={formData.firstName}
-              style={styles.input}
-            />
-          </View>
+        {/* Mobile Number */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>Mobile Number</Text>
+          <Forminput
+            placeholder="Mobile Number"
+            onChangeText={(text) => handleInputChange("mobile_number", text)}
+            value={formData.mobile_number}
+            style={styles.input}
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Delivery Time Frame</Text>
-            <Forminput
-              placeholder="Delivery Time Frame"
-              onChangeText={(text) => handleInputChange("firstName", text)}
-              value={formData.firstName}
-              style={styles.input}
-            />
-          </View>
+        {/* Relationship to Rider */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>Relationship to Rider</Text>
+          <Forminput
+            placeholder="Relationship to Rider"
+            onChangeText={(text) => handleInputChange("relationship", text)}
+            value={formData.relationship}
+            style={styles.input}
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Packaging Details</Text>
-
-            <CustomTextArea
-              placeholder="Enter text here..."
-              value={text}
-              onChangeText={handleTextChange}
-              style={{ width: "80%" }}
-              inputStyle={{
-                textAlignVertical: "top", // Ensures text starts from the top
-                paddingTop: 10, // Add paddingTop to control vertical padding
-                paddingBottom: 10, // Add paddingBottom to balance padding
-                backgroundColor: "#F6F8FAE5",
-                paddingHorizontal: 10,
-                paddingTop: 10, // Add paddingTop to control the vertical padding
-                paddingBottom: 10, // Add paddingBottom to balance the padding
-                height: 100,
-                borderRadius: 6,
-                fontSize: 16,
-              }}
-            />
-          </View>
-
-          {/* Additional input fields */}
-
-          {/* Action Button */}
-          <View style={styles.buttonContainer}>
-            <Pressable onPress={() => changeStep(3)} style={styles.button}>
-              {Registration_Mutation.isLoading ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                <Text style={styles.buttonText}>Continue</Text>
-              )}
-            </Pressable>
-          </View>
+        {/* Continue Button */}
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.button} onPress={() => NextOfKin_Mutation.mutate(formData)}>
+            {NextOfKin_Mutation.isLoading ? (
+              <ActivityIndicator color={"white"} size={"small"} />
+            ) : (
+              <Text style={styles.buttonText}>Continue</Text>
+            )}
+          </Pressable>
         </View>
       </View>
     </ScrollView>
