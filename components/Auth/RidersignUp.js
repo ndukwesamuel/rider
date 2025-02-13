@@ -6,6 +6,7 @@ import {
   Pressable,
   ScrollView,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import axios from "axios";
@@ -23,7 +24,7 @@ import {
 import { maincolors } from "../../utills/Themes";
 import AppscreenLogo from "../shared/AppscreenLogo";
 
-const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+const API_BASEURL = "https://foodmart-backend.gigtech.site/api/";
 
 const RidersignUp = ({ onSetAuth }) => {
   const navigation = useNavigation();
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   inputContainer: {
-    gap: 5,
+    gap: 20,
   },
   labels: {
     fontSize: 14,
@@ -92,6 +93,7 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
   },
   button: {
+    marginTop: 20,
     padding: 10,
     borderRadius: 5,
     backgroundColor: maincolors.primary, //"#001272",
@@ -107,31 +109,34 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 14,
     lineHeight: 22.4,
+    textAlign: "center",
   },
   loginText: {
     fontSize: 16,
     fontWeight: "500",
     lineHeight: 25.6,
   },
+  halfInput: {
+    width: "48%",
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });
 
 const StepOneSignUp = ({ onSetAuth, changeStep }) => {
-  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    Business_Name: "",
-    Business_Registration_Number: "",
-    Business_Address: "",
-    Contact_Persons_Name: "",
-    Contact_Persons_Email: "",
-    Contact_Persons_Mobile_Number: "",
-    Add_Emergency_Number: "",
+    name: "",
+    email: "",
+    mobile_number: "",
+    gender: "",
+    date_of_birth: "",
     password: "",
+    password_confirmation: "",
   });
-
-  const otpemail = useSelector((state) => state?.OnboardingSlice);
-  const { user_data, user_isLoading } = useSelector((state) => state?.Auth);
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) => ({
@@ -142,172 +147,162 @@ const StepOneSignUp = ({ onSetAuth, changeStep }) => {
 
   const Registration_Mutation = useMutation(
     (data_info) => {
-      const url = `${API_BASEURL}api/auth/signup`;
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      };
-      return axios.post(url, data_info, config);
+      const url = `${API_BASEURL}v1/rider/register`;
+      console.log({url})
+      return axios.post(url, data_info, {
+        headers: { "Content-Type": "application/json" },
+      });
     },
     {
       onSuccess: (success) => {
-        Toast.show({
-          type: "success",
-          text1: `${success?.data?.message}`,
-        });
-        dispatch(checkOtp(true));
+        Toast.show({ type: "success", text1: success.data.message });
+        dispatch(setOtpEmail(formData.email));
+        changeStep(2);
       },
       onError: (error) => {
-        Toast.show({
-          type: "error",
-          text1: `${error?.response?.data?.message}`,
-        });
+        Toast.show({ type: "error", text1: error?.response?.data?.message });
       },
     }
   );
 
-  const handleSignUp = () => {
-    dispatch(setOtpEmail(formData.Contact_Persons_Email));
-    Registration_Mutation.mutate(formData);
-  };
-
   return (
     <ScrollView style={styles.container}>
-      <View style={{}}>
-        <View style={{ alignSelf: "center" }}>
-          <Text style={styles.header}>Welcome!</Text>
-          <Text style={styles.subHeader}>Let’s Get Started as a Vendor</Text>
+      <Text style={styles.header}>Personal Information</Text>
+      <Text style={styles.subHeader}>Let’s Get Started</Text>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Full Name"
+          onChangeText={(text) => handleInputChange("name", text)}
+          value={formData.name}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          keyboardType="email-address"
+          onChangeText={(text) => handleInputChange("email", text)}
+          value={formData.email}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Mobile Number"
+          keyboardType="phone-pad"
+          onChangeText={(text) => handleInputChange("mobile_number", text)}
+          value={formData.mobile_number}
+        />
+
+        <View style={styles.row}>
+          <TextInput
+            style={[styles.input, styles.halfInput]}
+            placeholder="Gender (optional)"
+            onChangeText={(text) => handleInputChange("gender", text)}
+            value={formData.gender}
+          />
+          <TextInput
+            style={[styles.input, styles.halfInput]}
+            placeholder="Date of Birth (optional)"
+            onChangeText={(text) => handleInputChange("date_of_birth", text)}
+            value={formData.date_of_birth}
+          />
         </View>
 
-        <View style={{ gap: 10 }}>
-          {/** Business Name */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Business Name</Text>
-            <Forminput
-              placeholder="Business Name"
-              onChangeText={(text) => handleInputChange("Business_Name", text)}
-              value={formData.Business_Name}
-              style={styles.input}
-            />
-          </View>
-
-          {/** Business Registration Number */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Business Registration Number</Text>
-            <Forminput
-              placeholder="Registration Number"
-              onChangeText={(text) =>
-                handleInputChange("Business_Registration_Number", text)
-              }
-              value={formData.Business_Registration_Number}
-              style={styles.input}
-            />
-          </View>
-
-          {/** Business Address */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Business Address</Text>
-            <Forminput
-              placeholder="Business Address"
-              onChangeText={(text) =>
-                handleInputChange("Business_Address", text)
-              }
-              value={formData.Business_Address}
-              style={styles.input}
-            />
-          </View>
-
-          {/** Contact Person's Name */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Contact Person's Name</Text>
-            <Forminput
-              placeholder="Contact Person's Name"
-              onChangeText={(text) =>
-                handleInputChange("Contact_Persons_Name", text)
-              }
-              value={formData.Contact_Persons_Name}
-              style={styles.input}
-            />
-          </View>
-
-          {/** Contact Person's Email */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Contact Person's Email</Text>
-            <Forminput
-              placeholder="Contact Person's Email"
-              onChangeText={(text) =>
-                handleInputChange("Contact_Persons_Email", text)
-              }
-              value={formData.Contact_Persons_Email}
-              style={styles.input}
-            />
-          </View>
-
-          {/** Contact Person's Mobile Number */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Contact Person's Mobile Number</Text>
-            <Forminput
-              placeholder="Contact Person's Mobile Number"
-              onChangeText={(text) =>
-                handleInputChange("Contact_Persons_Mobile_Number", text)
-              }
-              value={formData.Contact_Persons_Mobile_Number}
-              style={styles.input}
-            />
-          </View>
-
-          {/** Emergency Number */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Emergency Contact Number</Text>
-            <Forminput
-              placeholder="Emergency Contact Number"
-              onChangeText={(text) =>
-                handleInputChange("Add_Emergency_Number", text)
-              }
-              value={formData.Add_Emergency_Number}
-              style={styles.input}
-            />
-          </View>
-
-          {/** Password */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.labels}>Password</Text>
-            <Forminputpassword
-              placeholder="Enter your password"
-              onChangeText={(text) => handleInputChange("password", text)}
-              value={formData.password}
-              style={styles.input}
-            />
-          </View>
-        </View>
-
-        {/** Action Button */}
-        <View style={styles.buttonContainer}>
-          <Pressable onPress={() => changeStep(2)} style={styles.button}>
-            {Registration_Mutation.isLoading ? (
-              <ActivityIndicator size="small" color="white" />
-            ) : (
-              <Text style={styles.buttonText}>Sign Up</Text>
-            )}
-          </Pressable>
-          <Pressable>
-            <Text style={styles.footerText}>
-              Already have an Account?
-              <Text
-                onPress={() => onSetAuth("sign-in")}
-                style={styles.loginText}
-              >
-                Sign In
-              </Text>
-            </Text>
-          </Pressable>
-        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          onChangeText={(text) => handleInputChange("password", text)}
+          value={formData.password}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm password"
+          onChangeText={(text) => handleInputChange("password_confirmation", text)}
+          value={formData.password_confirmation}
+        />
       </View>
+
+      <Pressable
+        style={styles.button}
+        onPress={() => Registration_Mutation.mutate(formData)}
+        disabled={Registration_Mutation?.isLoading}
+      >
+        {Registration_Mutation.isLoading ? (
+          <ActivityIndicator size="small" color="white" />
+        ) : (
+          <Text style={styles.buttonText}>Continue</Text>
+        )}
+      </Pressable>
+
+      <Text style={styles.footerText}>
+        Already have an Account?{" "}
+        <Text onPress={() => onSetAuth("sign-in")} style={styles.signInText}>
+          Sign In
+        </Text>
+      </Text>
     </ScrollView>
   );
 };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: "#fff",
+//     paddingHorizontal: 20,
+//     paddingTop: 60,
+//   },
+//   header: {
+//     fontSize: 24,
+//     fontWeight: "bold",
+//     color: "#1D3B28",
+//     textAlign: "center",
+//   },
+//   subHeader: {
+//     fontSize: 16,
+//     color: "#666",
+//     textAlign: "center",
+//     marginBottom: 20,
+//   },
+//   inputContainer: {
+//     marginBottom: 20,
+//   },
+//   input: {
+//     backgroundColor: "#F5F5F5",
+//     borderRadius: 8,
+//     padding: 12,
+//     marginBottom: 10,
+//     fontSize: 16,
+//     borderColor: "#ddd",
+//     borderWidth: 1,
+//   },
+//
+//   halfInput: {
+//     width: "48%",
+//   },
+//   button: {
+//     backgroundColor: "#FFA500",
+//     padding: 15,
+//     borderRadius: 8,
+//     alignItems: "center",
+//     marginBottom: 20,
+//   },
+//   buttonText: {
+//     fontSize: 18,
+//     fontWeight: "bold",
+//     color: "white",
+//   },
+//   footerText: {
+//     textAlign: "center",
+//     fontSize: 14,
+//     color: "#666",
+//   },
+//   signInText: {
+//     color: "#1D3B28",
+//     fontWeight: "bold",
+//   },
+// });
+
+// export default StepOneSignUp;
 
 const StepTwoSignUp = ({ onSetAuth, changeStep }) => {
   const navigation = useNavigation();

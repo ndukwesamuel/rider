@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import AuthOnboarding from "../components/Auth/AuthOnboarding"; // Onboarding component
 import SignIn from "../components/Auth/SignIn";
 import SignUp from "../components/Auth/SignUp";
+import RegistrationTypeScreen from "../components/Auth/RegistrationTypeScreen";
+import RidersignUp from "../components/Auth/RidersignUp";
 
 const Auth = () => {
   const [authType, setAuthType] = useState("main"); // Defaults to "main"
@@ -14,8 +16,10 @@ const Auth = () => {
     switch (authType) {
       case "main":
         return <AuthOnboarding setAuthType={setAuthType} />;
+      case "select":
+        return <RegistrationTypeScreen setAuthType={setAuthType} />;
       case "signup":
-        return <SignUp setAuthType={setAuthType} />;
+        return <RidersignUp setAuthType={setAuthType} />;
       case "signin":
         return <SignIn setAuthType={setAuthType} />;
       default:
