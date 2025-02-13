@@ -324,7 +324,10 @@ const StepTwoSignUp = ({ onSetAuth, changeStep }) => {
 
         {/* Continue Button */}
         <View style={styles.buttonContainer}>
-          <Pressable style={styles.button} onPress={() => NextOfKin_Mutation.mutate(formData)}>
+          <Pressable
+            style={styles.button}
+            onPress={() => NextOfKin_Mutation.mutate(formData)}
+          >
             {NextOfKin_Mutation.isLoading ? (
               <ActivityIndicator color={"white"} size={"small"} />
             ) : (
@@ -342,15 +345,9 @@ const StepThreeSignUp = ({ onSetAuth, changeStep }) => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    Business_Name: "",
-    Business_Registration_Number: "",
-    Business_Address: "",
-    Contact_Persons_Name: "",
-    Contact_Persons_Email: "",
-    Contact_Persons_Mobile_Number: "",
-    Add_Emergency_Number: "",
-    password: "",
-    gender: "", // Added gender here
+    account_name: "",
+    account_number: " ",
+    bank_id: " ",
   });
 
   const otpemail = useSelector((state) => state?.OnboardingSlice);
@@ -363,9 +360,9 @@ const StepThreeSignUp = ({ onSetAuth, changeStep }) => {
     }));
   };
 
-  const Registration_Mutation = useMutation(
+  const AddBankDetails_Mutation = useMutation(
     (data_info) => {
-      const url = `${API_BASEURL}api/auth/signup`;
+      const url = `${API_BASEURL}v1/profile/bank-details`;
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -380,7 +377,6 @@ const StepThreeSignUp = ({ onSetAuth, changeStep }) => {
           type: "success",
           text1: `${success?.data?.message}`,
         });
-        dispatch(checkOtp(true));
       },
       onError: (error) => {
         Toast.show({
@@ -390,20 +386,6 @@ const StepThreeSignUp = ({ onSetAuth, changeStep }) => {
       },
     }
   );
-
-  const handleSignUp = () => {
-    const { email, password, firstName, lastName, phoneNumber, homeAddress } =
-      formData;
-    dispatch(setOtpEmail(email));
-    Registration_Mutation.mutate({
-      email,
-      password,
-      userName: firstName,
-      lastName,
-      phoneNumber,
-      homeLocation: homeAddress,
-    });
-  };
 
   const [text, setText] = useState("");
 
@@ -434,8 +416,8 @@ const StepThreeSignUp = ({ onSetAuth, changeStep }) => {
             <Text style={styles.labels}>Account Name</Text>
             <Forminput
               placeholder="Account Name"
-              onChangeText={(text) => handleInputChange("firstName", text)}
-              value={formData.firstName}
+              onChangeText={(text) => handleInputChange("account_name", text)}
+              value={formData.account_name}
               style={styles.input}
             />
           </View>
@@ -444,8 +426,8 @@ const StepThreeSignUp = ({ onSetAuth, changeStep }) => {
             <Text style={styles.labels}>Account Number</Text>
             <Forminput
               placeholder="Delivery Time Frame"
-              onChangeText={(text) => handleInputChange("firstName", text)}
-              value={formData.firstName}
+              onChangeText={(text) => handleInputChange("account_number", text)}
+              value={formData.account_number}
               style={styles.input}
             />
           </View>
@@ -454,8 +436,8 @@ const StepThreeSignUp = ({ onSetAuth, changeStep }) => {
             <Text style={styles.labels}>Bank Name</Text>
             <Forminput
               placeholder="Bank"
-              onChangeText={(text) => handleInputChange("firstName", text)}
-              value={formData.firstName}
+              onChangeText={(text) => handleInputChange("bank_id", text)}
+              value={formData.bank_id}
               style={styles.input}
             />
           </View>
@@ -464,8 +446,11 @@ const StepThreeSignUp = ({ onSetAuth, changeStep }) => {
 
           {/* Action Button */}
           <View style={styles.buttonContainer}>
-            <Pressable onPress={() => changeStep(4)} style={styles.button}>
-              {Registration_Mutation.isLoading ? (
+            <Pressable
+              onPress={() => AddBankDetails_Mutation.mutate(formData)}
+              style={styles.button}
+            >
+              {AddBankDetails_Mutation.isLoading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
                 <Text style={styles.buttonText}>Continue</Text>
