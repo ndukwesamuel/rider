@@ -6,15 +6,16 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useMutation } from "react-query";
+import axios from "axios";
+import Toast from "react-native-toast-message";
 
+const API_BASEURL = "https://foodmart-backend.gigtech.site/api/";
 export default function ProfilePictureScreen({ onSetAuth2, onSetAuth }) {
   const [image, setImage] = useState(null);
-
-  console.log({
-    gg: image,
-  });
 
   const pickImage = async () => {
     // Ask for permission to access the media library
@@ -31,13 +32,42 @@ export default function ProfilePictureScreen({ onSetAuth2, onSetAuth }) {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
+
+  const UploadProfileImage_Mutation = useMutation(
+    async () => {
+      const url = `${API_BASEURL}v1/profile-picture`;
+      let formData = new FormData();
+
+      if (image) {
+        let uriParts = image.split(".");
+        let fileType = uriParts[uriParts.length - 1];
+
+        formData.append("ninDocument", {
+          uri: image,
+          name: `document.${fileType}`,
+          type: `image/${fileType}`,
+        });
+      }
+      return axios.post(url, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+    {
+      onSuccess: (success) => {
+        Toast.show({ type: "success", text1: success.data.message });
+        // dispatch(setOtpEmail(formData.email));
+        // changeStep(2);
+      },
+      onError: (error) => {
+        console.log({error: error})
+        Toast.show({ type: "error", text1: error?.response?.data?.message });
+      },
+    }
+  );
 
   return (
     <View style={styles.container}>
@@ -53,8 +83,15 @@ export default function ProfilePictureScreen({ onSetAuth2, onSetAuth }) {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.createButton}>
-        <Text style={styles.createButtonText}>Create</Text>
+      <TouchableOpacity
+        style={styles.createButton}
+        onPress={() => UploadProfileImage_Mutation.mutate()}
+      >
+        {UploadProfileImage_Mutation.isLoading ? (
+          <ActivityIndicator size={"small"} color={"white"} />
+        ) : (
+          <Text style={styles.createButtonText}>Create</Text>
+        )}
       </TouchableOpacity>
 
       <TouchableOpacity

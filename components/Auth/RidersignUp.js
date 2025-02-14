@@ -26,6 +26,7 @@ import {
 } from "../shared/InputForm";
 import { maincolors } from "../../utills/Themes";
 import AppscreenLogo from "../shared/AppscreenLogo";
+import ProfilePictureScreen from "./ProfilePictureScreen";
 
 const API_BASEURL = "https://foodmart-backend.gigtech.site/api/";
 
@@ -42,7 +43,7 @@ const RidersignUp = ({ onSetAuth }) => {
   return (
     <AppscreenLogo>
       {step === 1 ? (
-        <StepFiveSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
+        <ProfilePictureScreen onSetAuth={onSetAuth} changeStep={changeStep} />
       ) : step === 2 ? (
         <StepOneSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
       ) : step === 3 ? (
@@ -684,7 +685,7 @@ const StepFiveSignUp = ({ changeStep }) => {
         let uriParts = image.split(".");
         let fileType = uriParts[uriParts.length - 1];
 
-        formData.append("ninDocument", {
+        formData.append("document", {
           uri: image,
           name: `document.${fileType}`,
           type: `image/${fileType}`,
@@ -698,8 +699,8 @@ const StepFiveSignUp = ({ changeStep }) => {
     {
       onSuccess: (success) => {
         Toast.show({ type: "success", text1: success.data.message });
-        dispatch(setOtpEmail(formData.email));
-        changeStep(2);
+        // dispatch(setOtpEmail(formData.email));
+        // changeStep(2);
       },
       onError: (error) => {
         Toast.show({ type: "error", text1: error?.response?.data?.message });
