@@ -4,11 +4,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Image,
   ScrollView,
-  CheckBox,
 } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
+import { Ionicons } from "@expo/vector-icons";
 
 const VehicleInformationScreen = () => {
   const [transportService, setTransportService] = useState("");
@@ -28,6 +27,7 @@ const VehicleInformationScreen = () => {
 
     if (result.type !== "cancel") {
       setFile(result);
+      console.log(result);
     }
   };
 
@@ -44,7 +44,6 @@ const VehicleInformationScreen = () => {
           onChangeText={setTransportService}
         />
       </View>
-
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Plate Number</Text>
         <TextInput
@@ -71,52 +70,45 @@ const VehicleInformationScreen = () => {
         File should be 1MB below...pdf, jpg, png files only
       </Text>
 
-      {/* Upload Fields */}
-      <View style={styles.uploadSection}>
-        <Text style={styles.label}>Front View</Text>
-        <TouchableOpacity onPress={() => pickDocument(setFrontView)}>
-          <Text style={styles.browseText}>Browse</Text>
-        </TouchableOpacity>
-        {frontView && <Text style={styles.fileName}>{frontView.name}</Text>}
-      </View>
+      {[
+        { label: "Front View", state: frontView, setState: setFrontView },
+        { label: "Rear View", state: rearView, setState: setRearView },
+        { label: "Side View", state: sideView, setState: setSideView },
+        {
+          label: "Carriage Space",
+          state: carriageSpace,
+          setState: setCarriageSpace,
+        },
+      ].map((item, index) => (
+        <View key={index} style={styles.uploadSection}>
+          <Text style={styles.label}>{item.label}</Text>
+          <TouchableOpacity onPress={() => pickDocument(item.setState)}>
+            <Text style={styles.browseText}>Browse</Text>
+          </TouchableOpacity>
+          {item?.state && (
+            <Text style={styles.fileName}>{item.assets[0].name}</Text>
+          )}
+        </View>
+      ))}
 
-      <View style={styles.uploadSection}>
-        <Text style={styles.label}>Rear View</Text>
-        <TouchableOpacity onPress={() => pickDocument(setRearView)}>
-          <Text style={styles.browseText}>Browse</Text>
-        </TouchableOpacity>
-        {rearView && <Text style={styles.fileName}>{rearView.name}</Text>}
-      </View>
-
-      <View style={styles.uploadSection}>
-        <Text style={styles.label}>Side View</Text>
-        <TouchableOpacity onPress={() => pickDocument(setSideView)}>
-          <Text style={styles.browseText}>Browse</Text>
-        </TouchableOpacity>
-        {sideView && <Text style={styles.fileName}>{sideView.name}</Text>}
-      </View>
-
-      <View style={styles.uploadSection}>
-        <Text style={styles.label}>Carriage Space</Text>
-        <TouchableOpacity onPress={() => pickDocument(setCarriageSpace)}>
-          <Text style={styles.browseText}>Browse</Text>
-        </TouchableOpacity>
-        {carriageSpace && (
-          <Text style={styles.fileName}>{carriageSpace.name}</Text>
-        )}
-      </View>
-
-      {/* Terms & Conditions */}
-      <View style={styles.checkboxContainer}>
-        {/* <CheckBox value={termsAccepted} onValueChange={setTermsAccepted} /> */}
+      {/* Terms & Conditions with Icon */}
+      <TouchableOpacity
+        style={styles.checkboxContainer}
+        onPress={() => setTermsAccepted(!termsAccepted)}
+      >
+        <Ionicons
+          name={termsAccepted ? "checkmark-circle" : "ellipse-outline"}
+          size={24}
+          color={termsAccepted ? "green" : "gray"}
+        />
         <Text style={styles.checkboxText}>
-          By clicking this box, I have read, understood and agreed to the{" "}
+          I have read, understood, and agreed to the{" "}
           <Text style={styles.termsLink}>terms and conditions</Text> of Foodmart
         </Text>
-      </View>
+      </TouchableOpacity>
 
       {/* Submit Button */}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} disabled={!termsAccepted}>
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -124,7 +116,7 @@ const VehicleInformationScreen = () => {
 };
 
 const styles = {
-  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
+  container: { padding: 20, backgroundColor: "#fff" },
   header: {
     fontSize: 24,
     fontWeight: "bold",
