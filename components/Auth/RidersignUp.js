@@ -7,9 +7,12 @@ import {
   ScrollView,
   ActivityIndicator,
   TextInput,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -39,7 +42,7 @@ const RidersignUp = ({ onSetAuth }) => {
   return (
     <AppscreenLogo>
       {step === 1 ? (
-        <StepThreeSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
+        <StepFiveSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
       ) : step === 2 ? (
         <StepOneSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
       ) : step === 3 ? (
@@ -122,6 +125,47 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  uploadBox: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#D3D3D3",
+    borderStyle: "dashed",
+    borderRadius: 10,
+    padding: 10,
+    width: "100%",
+    height: 150,
+    backgroundColor: "#F9F9F9",
+  },
+  uploadIcon: {
+    width: 40,
+    height: 40,
+    marginBottom: 10,
+  },
+  uploadText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#2D3E50",
+  },
+  browseText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#007AFF",
+    textDecorationLine: "underline",
+    marginTop: 5,
+  },
+  uploadedImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 10,
+    resizeMode: "stretch",
+    // marginBottom: 1000,
+  },
+  sectionTitle: {
+    color: "#F79B2C",
+    fontSize: 20,
+    marginVertical: 20,
   },
 });
 
@@ -603,6 +647,133 @@ const StepFourSignUp = ({ onSetAuth, changeStep }) => {
             </Pressable>
           </View>
         </View>
+      </View>
+    </ScrollView>
+  );
+};
+
+const StepFiveSignUp = ({ changeStep }) => {
+  const [name, setName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [relationship, setRelationship] = useState("");
+  const [image, setImage] = useState(null);
+
+  const handleImageUpload = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const AddGuarantor_Mutation = useMutation(
+    async () => {
+      const url = `${API_BASEURL}v1/rider/onboarding/guarantors`;
+      let formData = new FormData();
+
+      formData.append("name", name);
+      formData.append("mobile_number", mobileNumber);
+      formData.append("relationship", relationship);
+
+      if (image) {
+        let uriParts = image.split(".");
+        let fileType = uriParts[uriParts.length - 1];
+
+        formData.append("ninDocument", {
+          uri: image,
+          name: `document.${fileType}`,
+          type: `image/${fileType}`,
+        });
+      }
+
+      return axios.post(url, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+    {
+      onSuccess: (success) => {
+        Toast.show({ type: "success", text1: success.data.message });
+        dispatch(setOtpEmail(formData.email));
+        changeStep(2);
+      },
+      onError: (error) => {
+        Toast.show({ type: "error", text1: error?.response?.data?.message });
+      },
+    }
+  );
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={{ alignSelf: "center" }}>
+        <Text style={styles.header}>Guarantors</Text>
+        <Text style={[styles.subHeader, { textAlign: "center" }]}>
+          Fill out all fields...
+        </Text>
+      </View>
+
+      <Text style={styles.sectionTitle}>Guarantor 1</Text>
+      <View style={{ gap: 10 }}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>Full Name</Text>
+          <Forminput
+            placeholder="Full Name"
+            onChangeText={(text) => setName(text)}
+            value={name}
+            style={styles.input}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>Mobile Number</Text>
+          <Forminput
+            placeholder="Mobile Number"
+            onChangeText={(text) => setMobileNumber(text)}
+            value={mobileNumber}
+            style={styles.input}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>Relationship to Rider</Text>
+          <Forminput
+            placeholder="Relationship to Rider"
+            onChangeText={(text) => setRelationship(text)}
+            value={relationship}
+            style={styles.input}
+          />
+        </View>
+
+        <Text style={styles.sectionTitle}>Upload Documents</Text>
+
+        <TouchableOpacity onPress={handleImageUpload} style={styles.uploadBox}>
+          {image ? (
+            <Image source={{ uri: image }} style={styles.uploadedImage} />
+          ) : (
+            <>
+              <Text style={styles.uploadIcon}>📤</Text>
+              <Text style={styles.uploadText}>Upload Passport Image</Text>
+              <Text style={styles.browseText}>or Browse</Text>
+            </>
+          )}
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <Pressable
+          onPress={() => AddGuarantor_Mutation.mutate()}
+          style={styles.button}
+        >
+          {AddGuarantor_Mutation.isLoading ? (
+            <ActivityIndicator size={"small"} color={"white"} />
+          ) : (
+            <Text style={styles.buttonText}>Continue</Text>
+          )}
+        </Pressable>
       </View>
     </ScrollView>
   );
