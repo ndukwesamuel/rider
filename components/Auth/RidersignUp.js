@@ -27,6 +27,8 @@ import {
 import { maincolors } from "../../utills/Themes";
 import AppscreenLogo from "../shared/AppscreenLogo";
 import ProfilePictureScreen from "./ProfilePictureScreen";
+import VehicleInformationForm from "./VehicleInformationForm";
+import VehicleInformationScreen from "./VehicleInformationForm";
 
 const API_BASEURL = "https://foodmart-backend.gigtech.site/api/";
 
@@ -41,9 +43,12 @@ const RidersignUp = ({ onSetAuth }) => {
   };
 
   return (
-    <AppscreenLogo>
+    <View>
       {step === 1 ? (
-        <ProfilePictureScreen onSetAuth={onSetAuth} changeStep={changeStep} />
+        <VehicleInformationScreen
+          onSetAuth={onSetAuth}
+          changeStep={changeStep}
+        />
       ) : step === 2 ? (
         <StepOneSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
       ) : step === 3 ? (
@@ -53,7 +58,7 @@ const RidersignUp = ({ onSetAuth }) => {
       ) : (
         <StepFourSignUp onSetAuth={onSetAuth} changeStep={changeStep} />
       )}
-    </AppscreenLogo>
+    </View>
   );
 };
 
