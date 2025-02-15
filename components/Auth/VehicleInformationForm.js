@@ -81,13 +81,17 @@ const VehicleInformationScreen = () => {
         },
       ].map((item, index) => (
         <View key={index} style={styles.uploadSection}>
-          <Text style={styles.label}>{item.label}</Text>
-          <TouchableOpacity onPress={() => pickDocument(item.setState)}>
+          <Text style={styles.label}>{item?.label}</Text>
+          <TouchableOpacity onPress={() => pickDocument(item?.setState)}>
             <Text style={styles.browseText}>Browse</Text>
           </TouchableOpacity>
-          {item?.state && (
-            <Text style={styles.fileName}>{item.assets[0].name}</Text>
-          )}
+          <View style={styles.fileContainer}>
+            {item?.state && (
+              <Text style={styles.fileName}>
+                {item?.state?.assets[0]?.name}
+              </Text>
+            )}
+          </View>
         </View>
       ))}
 
@@ -116,7 +120,10 @@ const VehicleInformationScreen = () => {
 };
 
 const styles = {
-  container: { padding: 20, backgroundColor: "#fff" },
+  container: {
+    padding: 20,
+    backgroundColor: "#fff",
+  },
   header: {
     fontSize: 24,
     fontWeight: "bold",
@@ -129,38 +136,78 @@ const styles = {
     color: "#666",
     marginBottom: 20,
   },
-  inputContainer: { marginBottom: 15 },
-  label: { fontSize: 14, fontWeight: "600", marginBottom: 5 },
-  input: { borderWidth: 1, borderColor: "#ccc", padding: 10, borderRadius: 5 },
+  inputContainer: {
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+  },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#033500",
     marginTop: 20,
   },
-  uploadNote: { fontSize: 12, color: "#ff0000", marginTop: 5 },
-  fileNote: { fontSize: 12, color: "#ff0000", marginBottom: 10 },
-  uploadSection: {
-    flexDirection: "row",
-    alignItems: "center",
+  uploadNote: {
+    fontSize: 12,
+    color: "#ff0000",
+    marginTop: 5,
+  },
+  fileNote: {
+    fontSize: 12,
+    color: "#ff0000",
     marginBottom: 10,
   },
-  browseText: { color: "#007BFF", fontWeight: "600" },
-  fileName: { marginLeft: 10, color: "#333" },
+  uploadSection: {
+    // flexDirection: "row",
+    // alignItems: "center",
+    marginBottom: 10,
+  },
+  browseText: {
+    color: "#007BFF",
+    fontWeight: "600",
+  },
+  fileName: {
+    marginLeft: 10,
+    color: "white",
+  },
+  fileContainer: {
+    backgroundColor: "grey",
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+  },
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 15,
   },
-  checkboxText: { marginLeft: 5, fontSize: 12 },
-  termsLink: { color: "#007BFF", textDecorationLine: "underline" },
+  checkboxText: {
+    marginLeft: 5,
+    fontSize: 12,
+  },
+  termsLink: {
+    color: "#007BFF",
+    textDecorationLine: "underline",
+  },
   button: {
     backgroundColor: "#FF9F00",
     padding: 15,
     borderRadius: 5,
     alignItems: "center",
   },
-  buttonText: { color: "#fff", fontWeight: "bold" },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
 };
 
 export default VehicleInformationScreen;
